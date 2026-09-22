@@ -1,0 +1,334 @@
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #3b82f6 rgba(255, 255, 255, 0.04);
+}
+
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.025);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+        180deg,
+        #60a5fa,
+        #3b82f6,
+        #6366f1
+    );
+
+    border-radius: 999px;
+
+    border: 2px solid #020617;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+        180deg,
+        #93c5fd,
+        #60a5fa,
+        #818cf8
+    );
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+
+#main{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#hero-3d {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+
+    opacity: 0.65;
+}
+
+#hero-3d::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: radial-gradient(
+        ellipse at center,
+        rgba(10, 153, 179, 0.35) 0%,
+        rgba(233, 255, 137, 0.12) 35%,
+        rgba(65, 0, 45, 0) 70%
+    );
+
+    pointer-events: none;
+}
+
+.hero-section > *:not(#hero-3d) {
+    position: relative;
+    z-index: 1;
+}
+.wit {
+    position: relative;
+    max-width: 950px;
+    margin: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 40px;
+    border-radius: 28px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(20, 28, 48, 0.92),
+            rgba(10, 15, 28, 0.96)
+        );
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    overflow: hidden;
+    isolation: isolate;
+    font-family: "Inter", sans-serif;
+    animation: witAppear 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.wit::before {
+    content: "";
+    position: absolute;
+    top: -220px;
+    right: -160px;
+    background: radial-gradient(
+        circle,
+        rgba(59, 130, 246, 0.25),
+        transparent 70%
+    );
+    filter: blur(10px);
+    z-index: -1;
+    animation: glowMove 8s ease-in-out infinite alternate;
+}
+
+.wit::after {
+    content: "";
+    position: absolute;
+
+    bottom: -180px;
+    left: -120px;
+    background: radial-gradient(
+        circle,
+        rgba(99, 102, 241, 0.18),
+        transparent 70%
+    );
+    filter: blur(15px);
+    z-index: -1;
+    animation: glowMoveReverse 10s ease-in-out infinite alternate;
+}
+
+.wit h1 {
+    position: relative;
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -3px;
+    line-height: 1;
+    color: #ffffff;
+    letter-spacing: -2.5px;
+
+    background: linear-gradient(
+        100deg,
+        #ffffff 0%,
+        #93c5fd 45%,
+        #60a5fa 75%,
+        #a78bfa 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleAppear 1s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.wit h1::after {
+    content: "";
+    display: block;
+    height: 4px;
+    margin-top: 18px;
+    border-radius: 10px;
+    background: linear-gradient(
+        90deg,
+        #3b82f6,
+        #8b5cf6
+    );
+    box-shadow:
+        0 0 15px rgba(59, 130, 246, 0.6),
+        0 0 35px rgba(139, 92, 246, 0.25);
+    animation: lineAppear 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.wit p {
+    position: relative;
+    color: rgba(226, 232, 240, 0.78);
+    font-size: 16px;
+    line-height: 1.9;
+    font-weight: 400;
+    letter-spacing: 0.1px;
+    opacity: 0;
+    transform: translateY(25px);
+    animation: paragraphAppear 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.wit p:nth-of-type(1) {
+    animation-delay: 0.35s;
+}
+
+.wit p:nth-of-type(2) {
+    margin-bottom: 0;
+    animation-delay: 0.55s;
+}
+
+.wit:hover {
+    border-color: rgba(96, 165, 250, 0.2);
+    box-shadow:
+        0 35px 100px rgba(0, 0, 0, 0.5),
+        0 0 50px rgba(59, 130, 246, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    transform: translateY(-4px);
+    transition:
+        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        border-color 0.5s ease,
+        box-shadow 0.5s ease;
+}
+
+.wit p:hover {
+    color: rgba(241, 245, 249, 0.95);
+    transition: color 0.3s ease;
+}
+
+@keyframes witAppear {
+    from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.97);
+        filter: blur(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+@keyframes titleAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+        filter: blur(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes lineAppear {
+    from {
+        opacity: 0;
+        width: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        width: 75%;
+        transform: translateX(0);
+    }
+}
+
+@keyframes paragraphAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glowMove {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(-100px, 80px) scale(1.35);
+    }
+}
+
+@keyframes glowMoveReverse {
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(100px, -70px) scale(1.3);
+    }
+}
+
+@media (max-width: 768px) {
+    .wit {
+        margin: 60px 20px;
+        padding: 45px 30px;
+        border-radius: 22px;
+    }
+
+    .wit h1 {
+        font-size: 24px;
+        letter-spacing: -2px;
+    }
+
+    .wit p {
+        font-size: 10px;
+        line-height: 1.8;
+    }
+}
+
+@media (max-width: 480px) {
+    .wit {
+        margin: 40px 14px;
+        padding: 35px 22px;
+        border-radius: 18px;
+    }
+
+    .wit h1 {
+        font-size: 40px;
+    }
+
+    .wit p {
+        font-size: 15px;
+        line-height: 1.75;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wit,
+    .wit h1,
+    .wit h1::after,
+    .wit p,
+    .wit::before,
+    .wit::after {
+        animation: none;
+        opacity: 1;
+        transform: none;
+        filter: none;
+    }
+
+    .wit:hover {
+        transform: none;
+    }
+}
