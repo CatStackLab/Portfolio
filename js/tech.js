@@ -49,17 +49,6 @@ function changeCategory() {
 
 intervalEvent = setInterval(changeCategory, 3000);
 
-function changeCategoryIntervalOff() {
-    if (changing) {
-        return;
-    }
-
-    changeCategory();
-    clearInterval(intervalEvent);
-}
-
-techPanel.addEventListener("click", changeCategoryIntervalOff);
-
 
 function setCategoriesHeight() {
     let maxHeight = 0;
