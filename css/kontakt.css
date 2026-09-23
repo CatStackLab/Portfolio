@@ -1,0 +1,175 @@
+
+.contact-email {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 25px;
+
+    margin-top: 30px;
+    padding: 16px 18px 16px 24px;
+
+    color: #ffffff;
+    text-decoration: none;
+
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.07),
+            rgba(255, 255, 255, 0.025)
+        );
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    transition:
+        transform 0.35s ease,
+        border-color 0.35s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.contact-email::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    bottom: 0;
+
+    width: 0;
+    height: 1px;
+
+    background: #4da6ff;
+
+    box-shadow:
+        0 0 12px rgba(77, 166, 255, 0.7);
+
+    transition: width 0.5s ease;
+}
+
+.contact-email::after {
+    content: "";
+
+    position: absolute;
+
+    top: -100%;
+    left: -40%;
+
+    width: 35%;
+    height: 300%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    transform: rotate(20deg);
+
+    transition:
+        left 0.7s ease;
+}
+.contact-email-text {
+    position: relative;
+    z-index: 2;
+
+    transition:
+        color 0.3s ease;
+}
+.contact-email-icon {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    transition:
+        transform 0.35s ease,
+        background 0.35s ease,
+        border-color 0.35s ease;
+}
+
+.contact-email:hover {
+    transform: translateY(-4px);
+
+    border-color:
+        rgba(77, 166, 255, 0.45);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(77, 166, 255, 0.10),
+            rgba(255, 255, 255, 0.035)
+        );
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.25),
+        0 0 25px rgba(77, 166, 255, 0.08);
+}
+
+.contact-email:hover::before {
+    width: 100%;
+}
+
+
+.contact-email:hover::after {
+    left: 130%;
+}
+
+
+.contact-email:hover .contact-email-text {
+    color: #ffffff;
+}
+
+
+.contact-email:hover .contact-email-icon {
+    transform: translateX(4px);
+
+    background:
+        rgba(77, 166, 255, 0.14);
+
+    border-color:
+        rgba(77, 166, 255, 0.35);
+}
+
+.contact-email-icon i {
+    transition:
+        transform 0.5s ease;
+}
+
+
+.contact-email:hover .contact-email-icon i {
+    transform: rotate(180deg);
+}
+
+.contact-email:active {
+    transform: translateY(-1px);
+}
+
+@media (max-width: 600px) {
+
+    .contact-email {
+        width: 100%;
+
+        justify-content: space-between;
+
+        font-size: 15px;
+
+        gap: 15px;
+    }
+
+}

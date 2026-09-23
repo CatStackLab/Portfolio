@@ -142,7 +142,6 @@
     background:
         rgba(2, 6, 23, 0.92);
 
-    backdrop-filter: blur(12px);
 
     opacity: 0;
     visibility: hidden;

@@ -3,32 +3,76 @@ const hero4L = document.querySelectorAll(".hero3-3d");
 hero4L.forEach((hero) => {
 
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", {
+        alpha: true
+    });
 
     hero.appendChild(canvas);
 
     const nodes = [];
     const pulses = [];
 
-    const NODE_COUNT = 50;
-    const CONNECTION_DISTANCE = 200;
+    const desktopNodeCount = 40;
+    const mobileNodeCount = 20;
+
+    const desktopConnectionDistance = 200;
+    const mobileConnectionDistance = 130;
+
     const PULSE_CHANCE = 0.0033;
+    const MAX_PULSES = 6;
+
+    const FPS = 30;
+    const FRAME_TIME = 1000 / FPS;
+
+    let NODE_COUNT = desktopNodeCount;
+    let CONNECTION_DISTANCE = desktopConnectionDistance;
 
     let width = 0;
     let height = 0;
+
+    let animationFrame = null;
+    let running = false;
+    let lastFrame = 0;
 
     function resize() {
 
         width = hero.clientWidth;
         height = hero.clientHeight;
 
-        const dpr = window.devicePixelRatio || 1;
+        if (!width || !height) {
+            return;
+        }
 
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
+        const isMobile =
+            window.innerWidth <= 768;
 
-        canvas.style.width = `${width}px`;
-        canvas.style.height = `${height}px`;
+        NODE_COUNT =
+            isMobile
+                ? mobileNodeCount
+                : desktopNodeCount;
+
+        CONNECTION_DISTANCE =
+            isMobile
+                ? mobileConnectionDistance
+                : desktopConnectionDistance;
+
+        const dpr =
+            Math.min(
+                window.devicePixelRatio || 1,
+                1.5
+            );
+
+        canvas.width =
+            Math.floor(width * dpr);
+
+        canvas.height =
+            Math.floor(height * dpr);
+
+        canvas.style.width =
+            `${width}px`;
+
+        canvas.style.height =
+            `${height}px`;
 
         ctx.setTransform(
             dpr,
@@ -47,12 +91,21 @@ hero4L.forEach((hero) => {
         nodes.length = 0;
         pulses.length = 0;
 
-        for (let i = 0; i < NODE_COUNT; i++) {
+        for (
+            let i = 0;
+            i < NODE_COUNT;
+            i++
+        ) {
 
             nodes.push({
 
-                x: Math.random() * width,
-                y: Math.random() * height,
+                x:
+                    Math.random() *
+                    width,
+
+                y:
+                    Math.random() *
+                    height,
 
                 vx:
                     (Math.random() - 0.5) *
@@ -67,7 +120,9 @@ hero4L.forEach((hero) => {
                     Math.random() * 2,
 
                 pulse:
-                    Math.random() * Math.PI * 2
+                    Math.random() *
+                    Math.PI *
+                    2
             });
         }
     }
@@ -79,27 +134,31 @@ hero4L.forEach((hero) => {
             node.x += node.vx;
             node.y += node.vy;
 
-            /*
-             * Zawijanie krawędzi
-             */
-
-            if (node.x < -30)
+            if (node.x < -30) {
                 node.x = width + 30;
+            }
 
-            if (node.x > width + 30)
+            if (node.x > width + 30) {
                 node.x = -30;
+            }
 
-            if (node.y < -30)
+            if (node.y < -30) {
                 node.y = height + 30;
+            }
 
-            if (node.y > height + 30)
+            if (node.y > height + 30) {
                 node.y = -30;
+            }
 
             node.pulse += 0.015;
         }
     }
 
     function createPulse(a, b) {
+
+        if (pulses.length >= MAX_PULSES) {
+            return;
+        }
 
         pulses.push({
 
@@ -116,13 +175,22 @@ hero4L.forEach((hero) => {
 
     function updatePulses() {
 
-        for (let i = pulses.length - 1; i >= 0; i--) {
+        for (
+            let i = pulses.length - 1;
+            i >= 0;
+            i--
+        ) {
 
-            const pulse = pulses[i];
+            const pulse =
+                pulses[i];
 
-            pulse.progress += pulse.speed;
+            pulse.progress +=
+                pulse.speed;
 
-            if (pulse.progress >= 1) {
+            if (
+                pulse.progress >= 1
+            ) {
+
                 pulses.splice(i, 1);
             }
         }
@@ -130,7 +198,15 @@ hero4L.forEach((hero) => {
 
     function drawConnections() {
 
-        for (let i = 0; i < nodes.length; i++) {
+        const maxDistanceSquared =
+            CONNECTION_DISTANCE *
+            CONNECTION_DISTANCE;
+
+        for (
+            let i = 0;
+            i < nodes.length;
+            i++
+        ) {
 
             const a = nodes[i];
 
@@ -148,18 +224,21 @@ hero4L.forEach((hero) => {
                 const dy =
                     a.y - b.y;
 
-                const distance =
-                    Math.sqrt(
-                        dx * dx +
-                        dy * dy
-                    );
+                const distanceSquared =
+                    dx * dx +
+                    dy * dy;
 
                 if (
-                    distance >
-                    CONNECTION_DISTANCE
+                    distanceSquared >
+                    maxDistanceSquared
                 ) {
                     continue;
                 }
+
+                const distance =
+                    Math.sqrt(
+                        distanceSquared
+                    );
 
                 const strength =
                     1 -
@@ -185,18 +264,13 @@ hero4L.forEach((hero) => {
 
                 ctx.stroke();
 
-                /*
-                 * Losowy impuls pomiędzy węzłami
-                 */
-
                 if (
                     Math.random() <
-                    PULSE_CHANCE * strength
+                    PULSE_CHANCE *
+                    strength
                 ) {
 
-                    if (pulses.length < 8) {
-                        createPulse(a, b);
-                    }
+                    createPulse(a, b);
                 }
             }
         }
@@ -222,10 +296,6 @@ hero4L.forEach((hero) => {
                 ) *
                 pulse.progress;
 
-            /*
-             * Glow
-             */
-
             const gradient =
                 ctx.createRadialGradient(
                     x,
@@ -233,7 +303,7 @@ hero4L.forEach((hero) => {
                     0,
                     x,
                     y,
-                    18
+                    14
                 );
 
             gradient.addColorStop(
@@ -242,7 +312,7 @@ hero4L.forEach((hero) => {
             );
 
             gradient.addColorStop(
-                0.3,
+                0.35,
                 "rgba(100, 180, 255, 0.15)"
             );
 
@@ -256,17 +326,15 @@ hero4L.forEach((hero) => {
             ctx.arc(
                 x,
                 y,
-                18,
+                14,
                 0,
                 Math.PI * 2
             );
 
-            ctx.fillStyle = gradient;
-            ctx.fill();
+            ctx.fillStyle =
+                gradient;
 
-            /*
-             * Rdzeń impulsu
-             */
+            ctx.fill();
 
             ctx.beginPath();
 
@@ -303,10 +371,6 @@ hero4L.forEach((hero) => {
                 8 +
                 radius * 3;
 
-            /*
-             * Poświata węzła
-             */
-
             const gradient =
                 ctx.createRadialGradient(
                     node.x,
@@ -337,12 +401,10 @@ hero4L.forEach((hero) => {
                 Math.PI * 2
             );
 
-            ctx.fillStyle = gradient;
-            ctx.fill();
+            ctx.fillStyle =
+                gradient;
 
-            /*
-             * Węzeł
-             */
+            ctx.fill();
 
             ctx.beginPath();
 
@@ -363,6 +425,25 @@ hero4L.forEach((hero) => {
 
     function animate(time) {
 
+        if (!running) {
+            return;
+        }
+
+        if (
+            time - lastFrame <
+            FRAME_TIME
+        ) {
+
+            animationFrame =
+                requestAnimationFrame(
+                    animate
+                );
+
+            return;
+        }
+
+        lastFrame = time;
+
         ctx.clearRect(
             0,
             0,
@@ -380,19 +461,94 @@ hero4L.forEach((hero) => {
 
         drawNodes(time);
 
-        requestAnimationFrame(
-            animate
-        );
+        animationFrame =
+            requestAnimationFrame(
+                animate
+            );
     }
+
+    function startAnimation() {
+
+        if (running) {
+            return;
+        }
+
+        running = true;
+        lastFrame = 0;
+
+        animationFrame =
+            requestAnimationFrame(
+                animate
+            );
+    }
+
+    function stopAnimation() {
+
+        if (!running) {
+            return;
+        }
+
+        running = false;
+
+        if (
+            animationFrame !== null
+        ) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            animationFrame = null;
+        }
+    }
+
+    const observer =
+        new IntersectionObserver(
+            (entries) => {
+
+                const entry =
+                    entries[0];
+
+                if (
+                    entry.isIntersecting
+                ) {
+
+                    startAnimation();
+
+                } else {
+
+                    stopAnimation();
+                }
+            },
+            {
+                threshold: 0.01
+            }
+        );
 
     resize();
 
-    requestAnimationFrame(
-        animate
-    );
+    observer.observe(hero);
+
+    let resizeTimeout = null;
 
     window.addEventListener(
         "resize",
-        resize
+        () => {
+
+            clearTimeout(
+                resizeTimeout
+            );
+
+            resizeTimeout =
+                setTimeout(
+                    () => {
+                        resize();
+                    },
+                    150
+                );
+        },
+        {
+            passive: true
+        }
     );
 });

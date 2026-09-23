@@ -98,7 +98,6 @@
     opacity: 0;
 
     transform: translateX(45px);
-
     pointer-events: none;
 
     transition:
@@ -107,6 +106,10 @@
 }
 
 .tech-category.active {
+    position: relative;
+    top: 0px;
+    left: 0px;
+
     opacity: 1;
 
     transform: translateX(0);

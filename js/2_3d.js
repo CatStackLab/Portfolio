@@ -3,7 +3,9 @@ const hero3L = document.querySelectorAll(".hero2-3d");
 hero3L.forEach((hero) => {
 
     const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", {
+        alpha: true
+    });
 
     hero.appendChild(canvas);
 
@@ -11,19 +13,38 @@ hero3L.forEach((hero) => {
     let height = 0;
     let time = 0;
 
-    const POINT_DISTANCE = 20;
-
     let points = [];
+    let columns = 0;
+
+    let animationFrame = null;
+    let running = false;
+
+    let lastFrame = 0;
+
+    const FPS = 30;
+    const FRAME_TIME = 1000 / FPS;
+
+    const desktopPointDistance = 24;
+    const mobilePointDistance = 32;
+
+    let POINT_DISTANCE = desktopPointDistance;
 
     function resize() {
 
         width = hero.clientWidth;
         height = hero.clientHeight;
 
-        const dpr = window.devicePixelRatio || 1;
+        if (!width || !height) {
+            return;
+        }
 
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
+        const dpr = Math.min(
+            window.devicePixelRatio || 1,
+            1.5
+        );
+
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
 
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
@@ -37,6 +58,11 @@ hero3L.forEach((hero) => {
             0
         );
 
+        POINT_DISTANCE =
+            window.innerWidth <= 768
+                ? mobilePointDistance
+                : desktopPointDistance;
+
         createPoints();
     }
 
@@ -44,28 +70,51 @@ hero3L.forEach((hero) => {
 
         points = [];
 
-        const columns =
-            Math.ceil(width / POINT_DISTANCE);
+        columns =
+            Math.ceil(width / POINT_DISTANCE) + 1;
 
         const rows =
-            Math.ceil(height / POINT_DISTANCE);
+            Math.ceil(height / POINT_DISTANCE) + 1;
 
-        for (let y = 0; y <= rows; y++) {
+        points.length = columns * rows;
 
-            for (let x = 0; x <= columns; x++) {
+        let index = 0;
 
-                points.push({
+        for (let y = 0; y < rows; y++) {
+
+            const baseY =
+                y * POINT_DISTANCE;
+
+            for (let x = 0; x < columns; x++) {
+
+                points[index++] = {
                     baseX: x * POINT_DISTANCE,
-                    baseY: y * POINT_DISTANCE,
-
+                    baseY: baseY,
                     x: 0,
-                    y: 0
-                });
+                    y: 0,
+                    fade: 0
+                };
             }
         }
     }
 
     function animate(timestamp) {
+
+        if (!running) {
+            return;
+        }
+
+        if (
+            timestamp - lastFrame <
+            FRAME_TIME
+        ) {
+            animationFrame =
+                requestAnimationFrame(animate);
+
+            return;
+        }
+
+        lastFrame = timestamp;
 
         time = timestamp * 0.001;
 
@@ -76,11 +125,10 @@ hero3L.forEach((hero) => {
             height
         );
 
-        for (const point of points) {
+        const centerX = width * 0.5;
+        const halfWidth = width * 0.5;
 
-            /*
-             * Główna fala
-             */
+        for (const point of points) {
 
             const wave =
                 Math.sin(
@@ -88,19 +136,11 @@ hero3L.forEach((hero) => {
                     time * 0.8
                 ) * 18;
 
-            /*
-             * Druga fala z innego kierunku
-             */
-
             const wave2 =
                 Math.sin(
                     point.baseY * 0.025 +
                     time * 0.6
                 ) * 12;
-
-            /*
-             * Delikatne przesunięcie
-             */
 
             point.x =
                 point.baseX + wave;
@@ -108,22 +148,19 @@ hero3L.forEach((hero) => {
             point.y =
                 point.baseY + wave2;
 
-            /*
-             * Perspektywa
-             */
-
             const distance =
                 Math.abs(
-                    point.baseX -
-                    width / 2
+                    point.baseX - centerX
                 );
 
             const fade =
                 1 -
                 Math.min(
-                    distance / (width / 2),
+                    distance / halfWidth,
                     1
                 );
+
+            point.fade = fade;
 
             const size =
                 0.7 +
@@ -145,71 +182,59 @@ hero3L.forEach((hero) => {
             ctx.fill();
         }
 
-        /*
-         * Linie pomiędzy punktami
-         */
-
-        const columns =
-            Math.ceil(width / POINT_DISTANCE) + 1;
-
         for (let i = 0; i < points.length; i++) {
 
             const point = points[i];
-
-            /*
-             * Połączenie z punktem po prawej
-             */
 
             if (
                 i + 1 < points.length &&
                 (i + 1) % columns !== 0
             ) {
 
-                const next =
-                    points[i + 1];
-
                 drawLine(
                     point,
-                    next
+                    points[i + 1]
                 );
             }
-
-            /*
-             * Połączenie z punktem poniżej
-             */
 
             if (
                 i + columns <
                 points.length
             ) {
 
-                const next =
-                    points[i + columns];
-
                 drawLine(
                     point,
-                    next
+                    points[i + columns]
                 );
             }
         }
 
-        requestAnimationFrame(animate);
+        animationFrame =
+            requestAnimationFrame(animate);
     }
 
     function drawLine(a, b) {
 
-        const distance =
-            Math.sqrt(
-                Math.pow(a.x - b.x, 2) +
-                Math.pow(a.y - b.y, 2)
-            );
+        const dx =
+            a.x - b.x;
+
+        const dy =
+            a.y - b.y;
+
+        const distanceSquared =
+            dx * dx +
+            dy * dy;
 
         const opacity =
             Math.max(
                 0,
                 0.06 -
-                distance * 0.001
+                Math.sqrt(distanceSquared) * 0.001
             );
+
+        if (opacity <= 0) {
+            return;
+        }
 
         ctx.beginPath();
 
@@ -231,14 +256,78 @@ hero3L.forEach((hero) => {
         ctx.stroke();
     }
 
+    function startAnimation() {
+
+        if (running) {
+            return;
+        }
+
+        running = true;
+        lastFrame = 0;
+
+        animationFrame =
+            requestAnimationFrame(animate);
+    }
+
+    function stopAnimation() {
+
+        if (!running) {
+            return;
+        }
+
+        running = false;
+
+        if (animationFrame !== null) {
+
+            cancelAnimationFrame(
+                animationFrame
+            );
+
+            animationFrame = null;
+        }
+    }
+
+    const observer =
+        new IntersectionObserver(
+            (entries) => {
+
+                const entry =
+                    entries[0];
+
+                if (entry.isIntersecting) {
+                    startAnimation();
+                } else {
+                    stopAnimation();
+                }
+            },
+            {
+                threshold: 0.01
+            }
+        );
+
     resize();
 
-    requestAnimationFrame(
-        animate
-    );
+    observer.observe(hero);
+
+    let resizeTimeout = null;
 
     window.addEventListener(
         "resize",
-        resize
+        () => {
+
+            clearTimeout(
+                resizeTimeout
+            );
+
+            resizeTimeout =
+                setTimeout(() => {
+
+                    resize();
+
+                }, 150);
+        },
+        {
+            passive: true
+        }
     );
 });
