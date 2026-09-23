@@ -12,7 +12,7 @@ hero4L.forEach((hero) => {
     const nodes = [];
     const pulses = [];
 
-    const desktopNodeCount = 40;
+    const desktopNodeCount = 200;
     const mobileNodeCount = 20;
 
     const desktopConnectionDistance = 200;
