@@ -1,26 +1,52 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
 button,
 a,
 input,
 textarea,
-select {
-    -webkit-tap-highlight-color: transparent;
+select,
+option,
+label,
+summary {
     -webkit-appearance: none;
     appearance: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
 button:focus,
+button:focus-visible,
 button:active,
 a:focus,
+a:focus-visible,
 a:active,
 input:focus,
+input:focus-visible,
 input:active,
 textarea:focus,
+textarea:focus-visible,
 textarea:active,
 select:focus,
+select:focus-visible,
 select:active {
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
+button:active,
+a:active {
+    background: inherit;
+    color: inherit;
+}
 * {
     box-sizing: border-box;
 }
