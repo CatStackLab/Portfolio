@@ -606,40 +606,7 @@ Generowanie PDF</code></pre>
 
 const projectsPanel = document.getElementById("projects-panel");
 
-Object.entries(projects).forEach(([id, project]) => {
 
-    const button = document.createElement("button");
-
-    button.type = "button";
-    button.className = "project-button";
-
-    button.innerHTML = `
-        <span class="project-button-number">
-            ${project.number}
-        </span>
-
-        <span class="project-button-content">
-
-            <strong>${project.title}</strong>
-
-            <span>
-                ${project.short}
-            </span>
-
-        </span>
-
-        <span class="project-button-arrow">
-            →
-        </span>
-    `;
-
-    button.addEventListener("click", () => {
-        openProject(id);
-    });
-
-    projectsPanel.appendChild(button);
-
-});
 
 const projectModal =
     document.getElementById("project-modal");
