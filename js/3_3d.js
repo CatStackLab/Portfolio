@@ -15,7 +15,7 @@ hero4L.forEach((hero) => {
     const desktopNodeCount = 200;
     const mobileNodeCount = 20;
 
-    const desktopConnectionDistance = 200;
+    const desktopConnectionDistance = 100;
     const mobileConnectionDistance = 130;
 
     const PULSE_CHANCE = 0.0033;

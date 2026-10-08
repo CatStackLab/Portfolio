@@ -144,7 +144,7 @@ body {
 }
 
 .hero3-3d {
-    opacity: 0.01;
+    opacity: 0.3;
 }
 
 .hero-3d::after,
@@ -183,6 +183,8 @@ body {
     -webkit-backdrop-filter: blur(20px);
     overflow: hidden;
     font-family: "Inter", sans-serif;
+        transition: scale 0.8s ease-in-out;
+
     animation: witAppear 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -284,16 +286,13 @@ body {
     transition:
         transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
         border-color 0.5s ease,
+        scale 0.3s ease-in-out
         box-shadow 0.5s ease;
 }
 
-.wit:hover {
-    border-color: rgba(96, 165, 250, 0.2);
-    box-shadow:
-        0 35px 100px rgba(0, 0, 0, 0.5),
-        0 0 50px rgba(59, 130, 246, 0.06),
-        inset 0 1px 0 rgba(255, 255, 255, 0.07);
-    transform: translateY(-4px);
+.wit:hover{
+        scale: 1.05;
+
 }
 
 .wit p:hover {

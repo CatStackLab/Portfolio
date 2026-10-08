@@ -11,67 +11,7 @@
 
     z-index: -1;
 
-    background:
-        linear-gradient(
-            135deg,
-            #001f3d 0%,
-            #094bc5 50%,
-            #000622 100%
-        );
+    background-color:#000;
 }
 
-@keyframes ambientFloat {
 
-    0% {
-        transform: translate3d(
-            -30px,
-            -20px,
-            0
-        ) scale(1);
-    }
-
-    50% {
-        transform: translate3d(
-            40px,
-            30px,
-            0
-        ) scale(1.08);
-    }
-
-    100% {
-        transform: translate3d(
-            -20px,
-            50px,
-            0
-        ) scale(0.95);
-    }
-
-}
-
-#ambient-background::after {
-    content: "";
-
-    position: absolute;
-    inset: 0;
-
-    background-image:
-        linear-gradient(
-            rgba(37, 99, 235, 0.025) 1px,
-            transparent 1px
-        ),
-        linear-gradient(
-            90deg,
-            rgba(37, 99, 235, 0.025) 1px,
-            transparent 1px
-        );
-
-    background-size: 50px 50px;
-
-    mask-image: radial-gradient(
-        ellipse at center,
-        black 0%,
-        transparent 75%
-    );
-
-    pointer-events: none;
-}
