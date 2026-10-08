@@ -183,8 +183,6 @@ body {
     -webkit-backdrop-filter: blur(20px);
     overflow: hidden;
     font-family: "Inter", sans-serif;
-        transition: scale 0.8s ease-in-out;
-
     animation: witAppear 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -286,7 +284,7 @@ body {
     transition:
         transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
         border-color 0.5s ease,
-        scale 0.1s ease-in-out
+        scale 0.3s ease-in-out,
         box-shadow 0.5s ease;
 }
 
