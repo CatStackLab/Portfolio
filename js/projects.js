@@ -253,7 +253,7 @@ const projects = {
         `
     },
     catdog: {
-        number: "04",
+        number: "inf",
         title: "CatDog AI",
         short: "System klasyfikacji obrazów wykorzystujący uczenie maszynowe do rozpoznawania kotów i psów.",
         content: `
@@ -405,7 +405,7 @@ const projects = {
         `
     },
     ocr: {
-    number: "05",
+    number: "04",
     title: "OCR - wykrywanie fragmentów numerycznych",
     short: "Narzędzie do automatycznego wykrywania i oznaczania elementów na obrazach z wykorzystaniem technologii OCR.",
     content: `
